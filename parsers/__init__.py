@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from lxml.html import fromstring, make_links_absolute
+
 import cookielib, json, re, urllib, urllib2
 
 RE_URL = re.compile(r"""(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))""")
@@ -19,7 +21,7 @@ class Parser():
         self.headers = [('User-agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36'),
                         ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')]
 
-    def grab(self, link):
+    def grab(self, link, tree=True):
         try:
             opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookie))
             opener.addheaders = self.headers
@@ -39,15 +41,7 @@ class Parser():
         except:
             content = None
 
+        if content and tree:
+            content = make_links_absolute(fromstring(content), link, resolve_base_href=True)
+
         return content
-
-class Queue():
-    list = {}
-
-    def register(self, name, grab):
-        if not name in list:
-            list[name] = grab
-
-    def run(self):
-        for name, grab in list.items():
-            grab()
