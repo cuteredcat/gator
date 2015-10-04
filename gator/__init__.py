@@ -19,14 +19,14 @@ db = MongoEngine(app)
 babel = Babel(app)
 
 # before import blueprints we need to init db
-from gator.core import core
-from gator.admin import admin
+#from gator.core import core
+#from gator.admin import admin
 
 # register blueprints
-app.register_blueprint(core)
-app.register_blueprint(admin)
+#app.register_blueprint(core)
+#app.register_blueprint(admin)
 
-@app.template_filter('timedelta')
+@app.template_filter("timedelta")
 def timedelta_filter(value):
     return format_timedelta(value)
 
