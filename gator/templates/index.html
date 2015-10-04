@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+{# import "ga.macro" as ga #}
+
+{% block content %}
+<section class="page index">
+  {% for news in newslist %}
+  <article>
+    <a href="{{ news.link }}" class="{{ news.tags|join(" ") }}">
+      <img src="{{ url_for('static', filename='img/media/%s.png' % news.media) }}" />
+      <span title="{{ news.created_at }}">{{ news.created_at|timedelta }} назад</span>
+      {{ news.text }}
+    </a>
+  </article>
+  {% endfor %}
+</section>
+{# ga.script()|safe #}
+{% endblock %}

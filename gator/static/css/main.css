@@ -1,0 +1,170 @@
+@import url(http://fonts.googleapis.com/css?family=Pacifico);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700&subset=latin,cyrillic);
+
+html, body{
+  height: 100%;
+}
+
+body {
+  color: #202020;
+
+  font-family: Open Sans, Helvetica, Arial, sans-serif;
+  font-size: 100%;
+  line-height: 1em;
+}
+
+a {
+  color: #00a0e6;
+}
+
+  a:hover {
+    color: #4dc9ff;
+  }
+
+.logo {
+  font-family: Pacifico, Open Sans, Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+header, footer {
+  font-size: 30px;
+  line-height: 80px;
+
+  box-sizing: border-box;
+  padding: 0 40px;
+
+  height: 80px;
+  width: 100%;
+}
+
+#content {
+  text-align: center;
+
+  width: 100%;
+}
+
+  #content h1 {
+    font-size: 80px;
+    font-weight: normal;
+    line-height: 80px;
+
+    margin: 0 0 40px 0;
+  }
+
+  #content h2 {
+    font-size: 24px;
+    font-weight: normal;
+    line-height: 24px;
+  }
+
+  #content h3 {
+    font-size: 22px;
+    font-weight: normal;
+    line-height: 22px;
+  }
+
+  #content input {
+    border: 1px solid #ffffff;
+    border-radius: 3px;
+
+    color: #202020;
+
+    line-height: 30px;
+
+    margin: 5px 5px;
+    padding: 0 10px;
+  }
+
+    #content input[name="full"] {
+      width: 600px;
+    }
+
+    #content input[name="short"] {
+      text-align: center;
+
+      width: 250px;
+    }
+
+    #content .page.info input[name="full"] {
+      background: none;
+      border: 1px dashed #80D8FF;
+
+      color: #ffffff;
+      text-align: center;
+      text-overflow: ellipsis;
+    }
+
+    #content .page.info input[name="short"] {
+      width: 400px;
+    }
+
+    #content .qr {
+      background: #ffffff;
+      border-radius: 3px;
+    }
+
+  #content button {
+    background: none;
+
+    border: 1px solid #ffffff;
+    border-radius: 3px;
+
+    color: #ffffff;
+    line-height: 30px;
+
+    padding: 0 20px;
+  }
+
+  #content button:hover {
+    background: #ffffff;
+
+    color: #00a0e6;
+  }
+
+  #content input.error,
+  #content textarea.error {
+    border: 1px solid #ff0000;
+    box-shadow: 0 0 10px rgba(255, 0, 0, .5);
+  }
+
+  #content div.error {
+    color: #ff0000;
+  }
+
+footer {
+  font-size: 1em;
+  text-align: right;
+}
+
+@media (min-height: 600px) {
+  header, footer {
+    position: relative;
+    z-index: 100;
+  }
+
+  header {
+    margin-bottom: -80px;
+  }
+
+  #content {
+    height: 100%;
+
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+
+    #content .page {
+      position: relative;
+      top: 50%;
+
+      -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+    }
+
+  footer {
+    margin-top: -80px;
+  }
+}

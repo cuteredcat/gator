@@ -24,8 +24,8 @@ MONGODB_SETTINGS = {
 
 BABEL_DEFAULT_LOCALE = "en"
 
-gator_NAME = "gator"
-gator_PROVIDER = "gator"
+GATOR_NAME = "gator"
+GATOR_PROVIDER = "gator"
 
 LINKS_PER_PAGE = 50
 

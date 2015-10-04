@@ -3,7 +3,7 @@
 
 from datetime import datetime
 
-from shorty import db
+from gator import db
 
 class News(db.Document):
     created_at = db.DateTimeField(default=datetime.now, required=True)
