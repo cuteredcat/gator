@@ -8,7 +8,7 @@ def grab(Parser, db):
     link = "http://censor.net.ua"
     page = parser.grab(link)
 
-    for el in page.cssselect("#w10 .curpane article header a"):
+    for el in reversed(page.cssselect("#w10 .curpane article header a")):
         href = el.get("href")
         text = u" ".join(el.xpath("./text()")).strip()
 

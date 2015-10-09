@@ -8,7 +8,7 @@ def grab(Parser, db):
     link = "http://gordonua.com"
     page = parser.grab(link)
 
-    for el in page.cssselect("#rlab_0 li a"):
+    for el in reversed(page.cssselect("#rlab_0 li a")):
         href = el.get("href")
         text = u" ".join(el.xpath("./text()")).strip()
 

@@ -5,10 +5,10 @@ def grab(Parser, db):
     # init parser
     parser = Parser(charset="utf-8")
 
-    link = "http://unian.net"
+    link = "http://www.unian.net"
     page = parser.grab(link)
 
-    for el in page.cssselect(".main_all_news li a"):
+    for el in reversed(page.cssselect(".main_all_news li a")):
         href = el.get("href")
         text = u" ".join(el.xpath("./text()")).strip()
 

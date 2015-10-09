@@ -42,7 +42,7 @@ $(document).ready(function() {
       console.log("Update now!");
 
       $.ajax({
-        url: "/" + ((update_timestamp || page_timestamp) - 2000) + "/",
+        url: "/" + (update_timestamp || page_timestamp) + "/",
         success: function(data) {
           showNews(data["newslist"].reverse(), false);
           update_timestamp = parseInt(data["timestamp"]);
@@ -86,7 +86,7 @@ $(window).scroll(function() {
     page_number += 1;
 
     $.ajax({
-      url: "/" + update_timestamp + "/page/" + page_number + "/",
+      url: "/" + page_timestamp + "/page/" + page_number + "/",
       success: function(data) {
         showNews(data["newslist"], true);
         page_loading = false;
