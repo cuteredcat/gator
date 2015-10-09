@@ -3,7 +3,7 @@
 
 from flask import Flask
 from flask.ext.mongoengine import MongoEngine
-from flask.ext.babel import Babel, format_timedelta
+from flask.ext.babel import Babel, format_time, format_timedelta
 
 from gator import settings
 
@@ -29,6 +29,10 @@ app.register_blueprint(core)
 @app.template_filter("timedelta")
 def timedelta_filter(value):
     return format_timedelta(value)
+
+@app.template_filter("time")
+def time_filter(value, format="HH:mm"):
+    return format_time(value, format=format)
 
 if __name__ == "__main__":
     app.run()

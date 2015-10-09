@@ -2,16 +2,22 @@
 {# import "ga.macro" as ga #}
 
 {% block content %}
-<section class="page index">
-  {% for news in newslist %}
-  <article>
-    <a href="{{ news.link }}" class="{{ news.tags|join(" ") }}">
-      <img src="{{ url_for('static', filename='img/media/%s.png' % news.media) }}" />
-      <span title="{{ news.created_at }}">{{ news.created_at|timedelta }} назад</span>
-      {{ news.text }}
-    </a>
-  </article>
-  {% endfor %}
-</section>
+  {% for news in newslist.items or newslist %}
+  <article id="{{ news.id }}">
+    <a href="{{ news.link }}" class="{{ news.tags|join(" ") }}" target="_blank" title="{{ news.text }}">
+      <span>{{ news.created_at|time }}</span>
+       <img src="{{ url_for('static', filename='img/media/%s.png' % news.media) }}" />
+       {{ news.text }}
+     </a>
+   </article>
+   {% endfor %}
+ </section>
+<div id="loader"><div class="loader"></div></div>
 {# ga.script()|safe #}
+<script type="text/javascript">
+  var page_images_url = "{{ url_for('static', filename='img/') }}",
+      page_number = 1,
+      page_timestamp = {{ timestamp|int }},
+      update_timestamp = {{ timestamp|int }};
+</script>
 {% endblock %}

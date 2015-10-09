@@ -14,9 +14,9 @@ class Tasks(Command):
 
     def run(self, parser):
         if parser:
-            self.parser(parser)
+            self.__parser(parser)
 
-    def parser(self, name):
+    def __parser(self, name):
         from gator.models import News
         from parsers import Parser
 
