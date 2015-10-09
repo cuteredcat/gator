@@ -83,7 +83,6 @@ $(window).scroll(function() {
     // show loader
     $("#loader").show();
     page_loading = true;
-
     page_number += 1;
 
     $.ajax({
