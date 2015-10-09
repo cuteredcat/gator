@@ -12,6 +12,7 @@ def grab(Parser, db):
         href = el.get("href")
         text = u" ".join(el.xpath("./text()")).strip()
 
-        if href and text:
-            news = db(media="gordonua_com", link=href, text=text, tags=["fast"])
-            news.save()
+        if href and text and not db.objects.filter(link=href):
+            print text
+            #news = db(media="gordonua_com", link=href, text=text, tags=["fast"])
+            #news.save()

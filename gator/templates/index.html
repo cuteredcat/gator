@@ -6,12 +6,12 @@
   <article id="{{ news.id }}">
     <a href="{{ news.link }}" class="{{ news.tags|join(" ") }}" target="_blank" title="{{ news.text }}">
       <span>{{ news.created_at|time }}</span>
-       <img src="{{ url_for('static', filename='img/media/%s.png' % news.media) }}" />
-       {{ news.text }}
-     </a>
-   </article>
-   {% endfor %}
- </section>
+      <img src="{{ url_for('static', filename='img/media/%s.png' % news.media) }}" />
+      {{ news.text }}
+    </a>
+  </article>
+  {% endfor %}
+</section>
 <div id="loader"><div class="loader"></div></div>
 {# ga.script()|safe #}
 <script type="text/javascript">

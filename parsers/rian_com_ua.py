@@ -3,16 +3,16 @@
 
 def grab(Parser, db):
     # init parser
-    parser = Parser()
+    parser = Parser(charset="utf-8")
 
-    link = "http://pravda.com.ua"
+    link = "http://rian.com.ua"
     page = parser.grab(link)
 
-    for el in page.cssselect("dl.mnews1 dd a"):
+    for el in page.cssselect(".main_news_list_items a"):
         href = el.get("href")
         text = u" ".join(el.xpath("./text()")).strip()
 
         if href and text and not db.objects.filter(link=href):
             print text
-            #news = db(media="pravda_com_ua", link=href, text=text, tags=["fast"])
+            #news = db(media="rian_com_ua", link=href, text=text, tags=["fast"])
             #news.save()
