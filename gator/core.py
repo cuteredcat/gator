@@ -38,6 +38,6 @@ def more(timestamp, page):
         return render_template("index.html", newslist=newslist, timestamp=timestamp)
 
 @core.route("/status/", methods=['GET'])
-def status(timestamp, page):
+def status():
     medialist = Media.objects.all()
     return render_template("status.html", medialist=medialist)

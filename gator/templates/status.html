@@ -5,13 +5,21 @@
 <section class="page status">
   <h1>Состояние</h1>
   {% for media in medialist %}
-  {% if media.group != group %}<h2>{{ media.group }}</h2>{% set group = media.group %}{% endif %}
-  <a href="{{ media.link }}" title="{{ media.name }}">
-    <img src="{{ url_for('static', filename='img/media/%s.png' % media.parser) }}" />
-    {{ media.name }}
-    <span class="status{% if media.status != 200 %} error{% endif %}">{{ media.last_update|timedelta }}</span>
-  </a>
+  {% if media.group != group %}
+  {% if group %}</ul>{% endif %}
+  <h2>{{ media.group }}</h2>
+  <ul>
+  {% endif %}
+    <li>
+      <a href="{{ media.link }}">
+        <img src="{{ url_for('static', filename='img/media/%s.png' % media.parser) }}" />
+        {{ media.name }}
+        <span class="status{% if media.status != "200" %} error{% endif %}" title="Последнее обновление">{{ media.last_update|timedelta }} назад</span>
+      </a>
+    </li>
+  {% set group = media.group %}
   {% endfor %}
+  </ul>
 </section>
 {# ga.script()|safe #}
 {% endblock %}

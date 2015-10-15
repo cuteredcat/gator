@@ -100,6 +100,59 @@ header, footer {
     background: #ffcc00;
   }
 
+  #content .page.status ul {
+    overflow: auto;
+    padding: 0;
+  }
+
+  #content .page.status li {
+    display: block;
+    float: left;
+
+    width: 50%;
+  }
+
+  #content .page.status a {
+    color: inherit;
+    line-height: 20px;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    display: block;
+    overflow: hidden;
+
+    margin: 4px 0;
+    padding: 4px 8px;
+  }
+
+    #content .page.status a:hover {
+      color: #4dc9ff;
+    }
+
+  #content .page.status img {
+    display: block;
+    float: left;
+    margin: 2px 5px 2px 0;
+
+    height: 16px;
+    width: 16px;
+  }
+
+  #content .page.status span.status {
+    color: #339933;
+    font-size: 12px;
+    line-height: 12px;
+
+    display: block;
+    float: right;
+    margin: 4px 5px 4px 0;
+  }
+
+    #content .page.status span.status.error {
+      color: #ff0000;
+    }
+
   .loader:before,
   .loader:after,
   .loader {
