@@ -3,10 +3,10 @@
 
 def grab(Parser):
     # init parser
-    parser = Parser(group="Политика",
-                    name="Gazeta.ua",
-                    link="http://gazeta.ua",
-                    parser="gazeta_ua",
+    parser = Parser(group=u"Политика",
+                    name=u"Gazeta.ua",
+                    link=u"http://gazeta.ua",
+                    parser=u"gazeta_ua",
                     charset="utf-8")
 
     try:

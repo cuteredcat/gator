@@ -26,7 +26,7 @@ class Batch():
                 self.__run(media.parser)
 
     def __run(self, name):
-        parser = importlib.import_module(name)
+        parser = importlib.import_module("parsers.%s" % name)
         parser.grab(Parser)
 
 class Parser():
@@ -44,8 +44,7 @@ class Parser():
             media.name = kwargs.get("name")
             media.link = kwargs.get("link")
             media.tags = kwargs.get("tags", [])
-            media.parser = kwargs.get("parser")
-            media.update()
+            media.save()
 
         except db.DoesNotExist:
             media = Media(group=kwargs.get("group"),

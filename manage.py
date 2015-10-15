@@ -6,7 +6,7 @@ from flask.ext.script import Command, Manager, Option, Server, Shell
 from gator import app
 
 class Parse(Command):
-    option_list = (Option('--parser', '-p', dest='parser'))
+    option_list = (Option('--parser', '-p', dest='parser'),)
 
     def run(self, parser):
         from parsers import Batch
