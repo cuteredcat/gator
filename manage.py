@@ -3,28 +3,17 @@
 
 from flask.ext.script import Command, Manager, Option, Server, Shell
 
-import importlib
-
 from gator import app
 
-class Tasks(Command):
-    option_list = (
-        Option('--parser', '-p', dest='parser'),
-    )
+class Parse(Command):
+    option_list = (Option('--parser', '-p', dest='parser'))
 
     def run(self, parser):
-        if parser:
-            self.__parser(parser)
-
-    def __parser(self, name):
-        from gator.models import News
-        from parsers import Parser
-
-        parser = importlib.import_module('parsers.%s' % name)
-        parser.grab(Parser, News)
+        from parsers import Batch
+        batch = Batch(parser)
 
 manager = Manager(app)
 manager.add_command("runserver", Server(host=app.config["HOST"], port=app.config["PORT"]))
-manager.add_command("tasks", Tasks())
+manager.add_command("parse", Parse())
 
 manager.run()

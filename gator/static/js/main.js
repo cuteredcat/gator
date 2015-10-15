@@ -20,8 +20,9 @@ var showNews = function(newslist, append) {
              .addClass(row["tags"].join(" "))
              .attr("href", row["link"])
              .attr("target", "_blank")
-             .attr("title", row["text"])
              .append(row["text"]);
+
+      article.find("a").attr("title", article.find("a")[0].hostname);
 
       article.find("span")
              .append(hours.substr(-2) + ":" + minutes.substr(-2));

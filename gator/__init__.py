@@ -4,6 +4,7 @@
 from flask import Flask
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.babel import Babel, format_time, format_timedelta
+from urlparse import urlparse
 
 from gator import settings
 
@@ -25,6 +26,10 @@ from gator.core import core
 # register blueprints
 app.register_blueprint(core)
 #app.register_blueprint(admin)
+
+@app.template_filter("host")
+def host_filter(value):
+    return urlparse(value).hostname
 
 @app.template_filter("timedelta")
 def timedelta_filter(value):

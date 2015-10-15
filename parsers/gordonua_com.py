@@ -1,17 +1,28 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-def grab(Parser, db):
+def grab(Parser):
     # init parser
-    parser = Parser(charset="utf-8")
+    parser = Parser(group="Политика",
+                    name="ГОРДОН",
+                    link="http://gordonua.com",
+                    parser="gordonua_com",
+                    charset="utf-8")
 
-    link = "http://gordonua.com"
-    page = parser.grab(link)
+    try:
+        link = "http://gordonua.com"
+        page = parser.grab(link)
+    except:
+        parser.status("404")
 
-    for el in reversed(page.cssselect("#rlab_0 li a")):
-        href = el.get("href")
-        text = u" ".join(el.xpath("./text()")).strip()
+    try:
+        for el in reversed(page.cssselect("#rlab_0 li a")):
+            href = el.get("href")
+            text = u" ".join(el.xpath("./text()")).strip()
 
-        if href and text and not db.objects.filter(link=href):
-            news = db(media="gordonua_com", link=href, text=text, tags=["fast"])
-            news.save()
+            if href and text:
+                parser.save(link=href, text=text, tags=["fast"])
+
+        parser.status("200")
+    except:
+        parser.status("500")

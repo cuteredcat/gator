@@ -1,17 +1,28 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-def grab(Parser, db):
+def grab(Parser):
     # init parser
-    parser = Parser(charset="utf-8")
+    parser = Parser(group="Политика",
+                    name="Gazeta.ua",
+                    link="http://gazeta.ua",
+                    parser="gazeta_ua",
+                    charset="utf-8")
 
-    link = "http://gazeta.ua"
-    page = parser.grab(link)
+    try:
+        link = "http://gazeta.ua"
+        page = parser.grab(link)
+    except:
+        parser.status("404")
 
-    for el in reversed(page.cssselect("#stream-simple .item a")):
-        href = el.get("href")
-        text = u" ".join(el.xpath("./text()")).strip()
+    try:
+        for el in reversed(page.cssselect("#stream-simple .item a")):
+            href = el.get("href")
+            text = u" ".join(el.xpath("./text()")).strip()
 
-        if href and text and not db.objects.filter(link=href):
-            news = db(media="gazeta_ua", link=href, text=text, tags=["fast"])
-            news.save()
+            if href and text:
+                parser.save(link=href, text=text, tags=["fast"])
+
+        parser.status("200")
+    except:
+        parser.status("500")
