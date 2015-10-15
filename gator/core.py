@@ -5,7 +5,7 @@ from datetime import datetime
 from flask import Blueprint, jsonify, redirect, render_template, request, url_for
 
 from gator import app, db
-from gator.models import News
+from gator.models import Media, News
 
 import time
 
@@ -36,3 +36,8 @@ def more(timestamp, page):
         return jsonify(newslist=newslist.items, timestamp=timestamp)
     else:
         return render_template("index.html", newslist=newslist, timestamp=timestamp)
+
+@core.route("/status/", methods=['GET'])
+def status(timestamp, page):
+    medialist = Media.objects.all()
+    return render_template("status.html", medialist=medialist)

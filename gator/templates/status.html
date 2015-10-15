@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+{# import "ga.macro" as ga #}
+
+{% block content %}
+<section class="page status">
+  <h1>Состояние</h1>
+  {% for media in medialist %}
+  {% if media.group != group %}<h2>{{ media.group }}</h2>{% set group = media.group %}{% endif %}
+  <a href="{{ media.link }}" title="{{ media.name }}">
+    <img src="{{ url_for('static', filename='img/media/%s.png' % media.parser) }}" />
+    {{ media.name }}
+    <span class="status{% if media.status != 200 %} error{% endif %}">{{ media.last_update|timedelta }}</span>
+  </a>
+  {% endfor %}
+</section>
+{# ga.script()|safe #}
+{% endblock %}
