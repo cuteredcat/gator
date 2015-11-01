@@ -34,7 +34,7 @@ class News(db.Document):
     link = db.URLField(required=True, unique=True)
     text = db.StringField(required=True)
     tags = db.ListField(db.StringField(max_length=30))
-    shares = db.ListField(db.EmbeddedDocumentField(Shares))
+    shares = db.EmbeddedDocumentListField(Shares)
 
     meta = {
         "indexes": ["-created_at", "tags"],
