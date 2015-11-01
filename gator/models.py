@@ -21,12 +21,20 @@ class Media(db.Document):
         "ordering": ["group", "name"]
     }
 
+class Shares(db.EmbeddedDocument):
+    social_network = db.StringField(required=True, unique=True)
+    count = db.IntField(required=True)
+
+    update = db.DateTimeField(default=datetime.now)
+    change = db.IntField()
+
 class News(db.Document):
     created_at = db.DateTimeField(default=datetime.now, required=True)
     media = db.StringField(required=True)
     link = db.URLField(required=True, unique=True)
     text = db.StringField(required=True)
     tags = db.ListField(db.StringField(max_length=30))
+    shares = db.ListField(db.EmbeddedDocumentField(Shares))
 
     meta = {
         "indexes": ["-created_at", "tags"],

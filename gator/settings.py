@@ -30,5 +30,8 @@ GATOR_PROVIDER = "gator"
 
 LINKS_PER_PAGE = 50
 
+FACEBOOK_CHECK_INTERVAL = 5
+FACEBOOK_ACCESS_TOKEN = "access_token"
+
 # Google Analytics
 GA_UA = "UA-XXXXXXXX-X"
