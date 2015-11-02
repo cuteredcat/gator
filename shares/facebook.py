@@ -16,8 +16,9 @@ class Facebook(SocialNetwork):
             separator = "&"
 
         json = self.json("https://graph.facebook.com/v2.5/%s%sfields=share&access_token=%s" % (link, separator, app.config["FACEBOOK_ACCESS_TOKEN"]))
+        #print link, json
 
         if json:
             return json["share"]["comment_count"] + json["share"]["share_count"]
-        except:
+        else:
             return 0

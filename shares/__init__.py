@@ -5,15 +5,14 @@ from datetime import datetime, timedelta
 from time import sleep
 
 from gator import db
-from gator.models import News, Shares
+from gator.models import News
 
 import cookielib, json, urllib2
 
 class SocialNetwork():
-    def __init__(self):
-        self.cookie = cookielib.CookieJar()
-        self.headers = [('User-agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36'),
-                        ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')]
+    cookie = cookielib.CookieJar()
+    headers = [('User-agent', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.93 Safari/537.36'),
+               ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')]
 
     def json(self, link):
         try:
@@ -53,23 +52,14 @@ class SocialNetwork():
                             created_at__lte=start,
                             shares__social_network__ne=self.name).first()
 
-        if news:
-            count = self.get(news.link)
-
-            news.shares.create(social_network=self.name,
-                               count = count,
-                               update = datetime.now(),
-                               change = count)
-
-            news.save()
-
-        else:
+        if not news:
             news = News.objects(created_at__gt=end,
                                 created_at__lte=start).order_by('shares__update').first()
 
-            if news:
-                count = self.get(news.link)
+        if news:
+            count = self.get(news.link)
 
+            if count:
                 try:
                     social_network = news.shares.get(social_network=self.name)
 
@@ -79,7 +69,12 @@ class SocialNetwork():
                     social_network.save()
 
                 except db.DoesNotExist:
-                    pass
+                    news.shares.create(social_network=self.name,
+                                       count = count,
+                                       update = datetime.now(),
+                                       change = count)
+
+                    news.save()
 
     def __update(self, lvl):
         if lvl == 1: start = datetime.now()
