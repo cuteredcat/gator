@@ -8,9 +8,6 @@
     <a href="{{ news.link }}" class="{{ news.tags|join(" ") }}" target="_blank" title="{{ news.link|host }}">
       <span>{{ news.created_at|time }}</span>
       <img src="{{ url_for('static', filename='img/media/%s.png' % news.media) }}" />
-      {% for share in news.shares %}
-      {% if share.social_network == "facebook" and share.count > 0 %}<div class="fb" data-social-network="facebook" data-count="{{ share.count }}" data-change="{{ share.change }}"><img src="{{ url_for('static', filename='img/facebook.svg') }}" alt="{{ share.count }}" /></div>{% endif %}
-      {% endfor %}
       {{ news.text }}
     </a>
   </article>

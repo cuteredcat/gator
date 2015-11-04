@@ -62,9 +62,9 @@ class SocialNetwork():
             try:
                 social_network = news.shares.get(social_network=self.name)
 
-                social_network.count += count
+                social_network.change = count - social_network.count
+                social_network.count = count
                 social_network.update = datetime.now()
-                social_network.change = count
                 social_network.save()
 
             except db.DoesNotExist:

@@ -97,15 +97,6 @@ header, footer {
       margin: 4px 5px 4px 0;
     }
 
-    #content article .fb {
-      color: #0066ff;
-      font-size: 12px;
-      line-height: 20px;
-
-      fill: #0066ff;
-      float: left;
-    }
-
   #content article.last {
     background: #ffcc00;
   }
