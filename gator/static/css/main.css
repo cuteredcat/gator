@@ -102,7 +102,8 @@ header, footer {
       font-size: 12px;
       line-height: 20px;
 
-      float: right;
+      fill: #0066ff;
+      float: left;
     }
 
   #content article.last {

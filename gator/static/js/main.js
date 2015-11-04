@@ -27,8 +27,26 @@ var showNews = function(newslist, append) {
       article.find("span")
              .append(hours.substr(-2) + ":" + minutes.substr(-2));
 
-      article.find("img")
+      article.find("a > img")
              .attr("src", page_images_url + "media/" + row["media"] + ".png");
+
+      for (var s = 0, lenS = row["shares"].length; s < lenS; s++) {
+        var shareData = row["shares"][s];
+        if (shareData["count"] > 0) {
+          var share = $("<div><img /></div>");
+
+          share.addClass("fb")
+               .data("social_network", shareData["social_network"])
+               .data("count", shareData["count"])
+               .data("change", shareData["change"]);
+
+          share.find("img")
+               .attr("src", page_images_url + shareData["social_network"] + ".svg")
+               .attr("alt", shareData["count"]);
+
+          article.find("a > img").after(share);
+        }
+      }
 
       if (append) { $("section.page.index").append(article); }
       else { $("section.page.index").prepend(article); }
