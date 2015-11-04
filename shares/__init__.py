@@ -59,22 +59,20 @@ class SocialNetwork():
         if news:
             count = self.get(news.link)
 
-            if count:
-                try:
-                    social_network = news.shares.get(social_network=self.name)
+            try:
+                social_network = news.shares.get(social_network=self.name)
 
-                    social_network.count += count
-                    social_network.update = datetime.now()
-                    social_network.change = count
-                    social_network.save()
+                social_network.count += count
+                social_network.update = datetime.now()
+                social_network.change = count
+                social_network.save()
 
-                except db.DoesNotExist:
-                    news.shares.create(social_network=self.name,
-                                       count = count,
-                                       update = datetime.now(),
-                                       change = count)
-
-                    news.save()
+            except db.DoesNotExist:
+                news.shares.create(social_network=self.name,
+                                   count = count,
+                                   update = datetime.now(),
+                                   change = count)
+                news.save()
 
     def __update(self, lvl):
         if lvl == 1: start = datetime.now()

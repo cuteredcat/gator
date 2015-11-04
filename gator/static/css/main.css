@@ -77,7 +77,8 @@ header, footer {
         color: #4dc9ff;
       }
 
-    #content article img {
+    #content article img,
+    #content article svg {
       display: block;
       float: left;
       margin: 2px 5px 2px 0;
@@ -94,6 +95,14 @@ header, footer {
       display: block;
       float: left;
       margin: 4px 5px 4px 0;
+    }
+
+    #content article .fb {
+      color: #0066ff;
+      font-size: 12px;
+      line-height: 20px;
+
+      float: right;
     }
 
   #content article.last {
