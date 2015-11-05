@@ -1,6 +1,6 @@
-var showNews = function(newslist, append) {
-  for (var i = 0, len = newslist.length; i < len; i++) {
-    var row = newslist[i];
+var showNews = function(news, append) {
+  for (var i = 0, len = news.length; i < len; i++) {
+    var row = news[i];
 
     if (!$("#" + row["_id"]["$oid"]).length) {
       var article = $("<article><a><span></span><img /></a></article>"),
@@ -30,27 +30,29 @@ var showNews = function(newslist, append) {
       article.find("a > img")
              .attr("src", page_images_url + "media/" + row["media"] + ".png");
 
-      if (append) { $("section.page.index").append(article); }
-      else { $("section.page.index").prepend(article); }
+      if (append) { $("section.page").append(article); }
+      else { $("section.page").prepend(article); }
     }
   }
 }
 
 $(document).ready(function() {
-  // update page content each minute or so
-  if (page_timestamp > 0) {
-    console.log("New valid timestamp: " + page_timestamp);
-    var updateInterval = setInterval(function() {
-      console.log("Update now!");
+  if ($(".page.timeline").length) {
+    // update page content each minute or so
+    if (page_timestamp > 0) {
+      console.log("New valid timestamp: " + page_timestamp);
+      var updateInterval = setInterval(function() {
+        console.log("Update now!");
 
-      $.ajax({
-        url: "/" + (update_timestamp || page_timestamp) + "/",
-        success: function(data) {
-          showNews(data["newslist"].reverse(), false);
-          update_timestamp = parseInt(data["timestamp"]);
-        }
-      });
-    }, 60000);
+        $.ajax({
+          url: "/timeline/" + (update_timestamp || page_timestamp) + "/",
+          success: function(data) {
+            showNews(data["news"].reverse(), false);
+            update_timestamp = parseInt(data["timestamp"]);
+          }
+        });
+      }, 60000);
+    }
   }
 
   // init copy to clipboard button
@@ -78,7 +80,7 @@ $(document).mousemove(function() {
 var page_loading = false;
 
 $(window).scroll(function() {
-  if(!page_loading && $(document).height() - ($(window).scrollTop() + $(window).height()) < 300) {
+  if($(".page.timeline").length && !page_loading && $(document).height() - ($(window).scrollTop() + $(window).height()) < 300) {
     // load next page
     console.log("Next page!");
 
@@ -88,9 +90,9 @@ $(window).scroll(function() {
     page_number += 1;
 
     $.ajax({
-      url: "/" + page_timestamp + "/page/" + page_number + "/",
+      url: "/timeline/" + page_timestamp + "/page/" + page_number + "/",
       success: function(data) {
-        showNews(data["newslist"], true);
+        showNews(data["news"], true);
         page_loading = false;
       },
       complete: function() {

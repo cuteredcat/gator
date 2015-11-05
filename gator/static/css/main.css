@@ -38,6 +38,53 @@ header, footer {
   width: 100%;
 }
 
+  header ul {
+    list-style-type: none;
+
+    float: left;
+    margin: 0 0 0 50px;
+    padding: 0;
+  }
+
+    header ul ul {
+      margin: 0;
+    }
+
+  header li {
+    display: block;
+    float: left;
+    padding: 10px 0 10px 30px;
+  }
+
+    header li a {
+      line-height: 40px;
+      text-decoration: none;
+      text-transform: uppercase;
+
+      display: block;
+    }
+
+      header li.one a {
+        line-height: 60px;
+      }
+
+    header ul ul li {
+      padding: 0 0 0 10px;
+    }
+
+      header ul ul li a {
+        font-size: 18px;
+        line-height: 20px;
+      }
+
+    header li:first-child {
+      padding-left: 0;
+    }
+
+  header .logo {
+    float: left;
+  }
+
 #content {
   text-align: left;
 

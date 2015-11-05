@@ -2,7 +2,7 @@
 {# import "ga.macro" as ga #}
 
 {% block content %}
-<section class="page index">
+<section class="page timeline">
   {% for news in news.items or news %}
   <article id="{{ news.id }}">
     <a href="{{ news.link }}" class="{{ news.tags|join(" ") }}" target="_blank" title="{{ news.link|host }}">
