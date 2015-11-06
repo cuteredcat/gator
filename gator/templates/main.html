@@ -14,15 +14,15 @@
     <header>
       <a class="logo" href="{{ url_for('core.index') }}">{{ config.GATOR_PROVIDER|default("Gator") }}</a>
       <ul>
+        <li><a href="{{ url_for('core.timeline') }}">Лента</a></li>
         <li>
-          <a href="{{ url_for('core.index') }}">Важное</a>
+          <a href="{{ url_for('core.index') }}">Топ:</a>
           <ul>
             <li><a href="{{ url_for('core.index', hours='6') }}">6 часов</a></li>
             <li><a href="{{ url_for('core.index', hours='24') }}">24 часа</a></li>
             <li><a href="{{ url_for('core.index', days='30') }}">30 дней</a></li>
           </ul>
         </li>
-        <li class="one"><a href="{{ url_for('core.timeline') }}">Лента</a></li>
       </ul>
       {% block header %}{% endblock %}
     </header>

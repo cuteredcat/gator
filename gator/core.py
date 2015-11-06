@@ -30,7 +30,7 @@ def last(hours=None, days=None, page=1):
 
     if request.is_xhr:
         news = News.objects(created_at__gt=(datetime.now() - delta)).order_by("-shares__count").paginate(page=page, per_page=app.config["LINKS_PER_PAGE"])
-        return jsonify(news=news.items(), page=page)
+        return jsonify(news=news.items, page=page)
     else:
         return redirect(url_for("core.index"))
 
@@ -43,16 +43,16 @@ def timeline(stamp=None, page=1):
         news = News.objects().paginate(page=page, per_page=app.config["LINKS_PER_PAGE"])
     else:
         if page > 1:
-            news = News.objects(created_at__lte=datetime.utcfromstamp(stamp)).paginate(page=page, per_page=app.config["LINKS_PER_PAGE"])
+            news = News.objects(created_at__lte=datetime.utcfromtimestamp(stamp)).paginate(page=page, per_page=app.config["LINKS_PER_PAGE"])
         else:
-            news = News.objects(created_at__gt=datetime.utcfromstamp(stamp)).paginate(page=page, per_page=app.config["LINKS_PER_PAGE"])
+            news = News.objects(created_at__gt=datetime.utcfromstimetamp(stamp)).paginate(page=page, per_page=app.config["LINKS_PER_PAGE"])
 
     stamp = time.time()
 
     if request.is_xhr:
         return jsonify(news=news.items, stamp=stamp)
     else:
-        return render_template("index.html", news=news, stamp=stamp)
+        return render_template("timeline.html", news=news, stamp=stamp)
 
 @core.route("/status/", methods=['GET'])
 def status():

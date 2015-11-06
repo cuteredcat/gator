@@ -1,6 +1,13 @@
 var showNews = function(news, append) {
+  // clear UPDATED class-flag
+  $(".page article.updated").removeClass("updated");
+
   for (var i = 0, len = news.length; i < len; i++) {
-    var row = news[i];
+    var row = news[i],
+        shares = 0;
+
+    // sum shares count
+    for (var s = 0; s < row["shares"].length; s++) { shares += row["shares"][s]["count"]; }
 
     if (!$("#" + row["_id"]["$oid"]).length) {
       var article = $("<article><a><span></span><img /></a></article>"),
@@ -24,14 +31,34 @@ var showNews = function(news, append) {
 
       article.find("a").attr("title", article.find("a")[0].hostname);
 
-      article.find("span")
-             .append(hours.substr(-2) + ":" + minutes.substr(-2));
-
       article.find("a > img")
              .attr("src", page_images_url + "media/" + row["media"] + ".png");
 
+      if ($(".page.timeline").length) {
+        article.find("span")
+               .text(hours.substr(-2) + ":" + minutes.substr(-2));
+      }
+      else if ($(".page.last").length) {
+        article.addClass("updated");
+        article.data("shares", shares);
+
+        article.find("span")
+               .text(shares);
+      }
+
       if (append) { $("section.page").append(article); }
       else { $("section.page").prepend(article); }
+    }
+    else {
+      var article = $("#" + row["_id"]["$oid"]);
+
+      if ($(".page.last").length) {
+        article.addClass("updated");
+        article.data("shares", shares);
+
+        article.find("span")
+               .text(shares);
+      }
     }
   }
 }
@@ -39,20 +66,43 @@ var showNews = function(news, append) {
 $(document).ready(function() {
   if ($(".page.timeline").length) {
     // update page content each minute or so
-    if (page_timestamp > 0) {
-      console.log("New valid timestamp: " + page_timestamp);
+    if (page_stamp > 0) {
+      console.log("New valid stamp: " + page_stamp);
       var updateInterval = setInterval(function() {
         console.log("Update now!");
 
         $.ajax({
-          url: "/timeline/" + (update_timestamp || page_timestamp) + "/",
+          url: "/timeline/" + (update_stamp || page_stamp) + "/",
           success: function(data) {
             showNews(data["news"].reverse(), false);
-            update_timestamp = parseInt(data["timestamp"]);
+            update_stamp = parseInt(data["stamp"]);
           }
         });
       }, 60000);
     }
+  }
+  else if ($(".page.last").length) {
+    (function autoupdate() {
+      console.log("Auto update with rating!");
+
+      $.ajax({
+        url: window.location.href + "page/" + page_number,
+        success: function(data) {
+          showNews(data["news"], true);
+
+          $(".page article:not(.updated)").remove();
+
+          var articleHeight = $(".page article:first-child").outerHeight(true);
+          $(".page").css("height", articleHeight * data["news"].length + "px");
+
+          for (var i = 0; i < data["news"].length; i++) {
+            $("#" + data["news"][i]["_id"]["$oid"]).css("top", articleHeight * i + "px");
+          }
+        }
+      });
+
+      setTimeout(autoupdate, 20000);
+    })();
   }
 
   // init copy to clipboard button
@@ -90,7 +140,7 @@ $(window).scroll(function() {
     page_number += 1;
 
     $.ajax({
-      url: "/timeline/" + page_timestamp + "/page/" + page_number + "/",
+      url: "/timeline/" + page_stamp + "/page/" + page_number + "/",
       success: function(data) {
         showNews(data["news"], true);
         page_loading = false;
