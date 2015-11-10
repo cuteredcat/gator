@@ -59,9 +59,9 @@ header, footer {
     header li a {
       line-height: 30px;
       text-decoration: none;
-      text-transform: uppercase;
 
       display: block;
+      float: left;
     }
 
     header ul ul li {
@@ -100,7 +100,7 @@ header, footer {
 }
 
   #content article {
-    background: none;
+    background: #ffffff;
     font-weight: normal;
     line-height: 20px;
 
@@ -159,7 +159,10 @@ header, footer {
   }
 
     #content .page.last article {
+      margin: 0 auto;
       position: absolute;
+
+      width: 80%;
 
       -webkit-transition: top 500ms ease-out;
       -moz-transition: top 500ms ease-out;

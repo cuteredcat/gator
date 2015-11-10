@@ -1,3 +1,28 @@
+var pageDelta;
+
+var autoUpdate = function() {
+  if (pageDelta) { var url = "/lastnews-" + page_delta + ".json"; }
+  else { var url = "/lastnews.json"; }
+
+  $.ajax({
+    url: url,
+    success: function(data) {
+      showNews(data, true);
+
+      $(".page article:not(.updated)").remove();
+
+      var articleHeight = $(".page article:first-child").outerHeight(true);
+      $(".page").css("height", articleHeight * data.length + "px");
+
+      for (var i = 0; i < data.length; i++) {
+        $("#" + data[i]["_id"]["$oid"]).css("top", (pageOffset.top + articleHeight * i) + "px");
+      }
+    }
+  });
+
+  setTimeout(autoUpdate, 20000);
+}
+
 var showNews = function(news, append) {
   // clear UPDATED class-flag
   $(".page article.updated").removeClass("updated");
@@ -64,6 +89,13 @@ var showNews = function(news, append) {
 }
 
 $(document).ready(function() {
+  $("a.lastnews").on("click", function(event) {
+    pageDelta = $(this).data("delta");
+
+    // don't open links
+    event.preventDefault();
+  });
+
   if ($(".page.timeline").length) {
     // update page content each minute or so
     if (page_stamp > 0) {
@@ -82,27 +114,8 @@ $(document).ready(function() {
     }
   }
   else if ($(".page.last").length) {
-    (function autoupdate() {
-      console.log("Auto update with rating!");
-
-      $.ajax({
-        url: window.location.href + "page/" + page_number,
-        success: function(data) {
-          showNews(data["news"], true);
-
-          $(".page article:not(.updated)").remove();
-
-          var articleHeight = $(".page article:first-child").outerHeight(true);
-          $(".page").css("height", articleHeight * data["news"].length + "px");
-
-          for (var i = 0; i < data["news"].length; i++) {
-            $("#" + data["news"][i]["_id"]["$oid"]).css("top", articleHeight * i + "px");
-          }
-        }
-      });
-
-      setTimeout(autoupdate, 20000);
-    })();
+    console.log("Auto update with rating!");
+    autoUpdate();
   }
 
   // init copy to clipboard button

@@ -12,27 +12,27 @@ import time
 # create blueprint
 core = Blueprint("core", __name__, template_folder="templates")
 
-@core.route("/", methods=['GET'])
-@core.route("/<int:hours>-hours/", methods=['GET'])
-@core.route("/<int:days>-days/", methods=['GET'])
-def index(hours=None, days=None):
-    return render_template("index.html", hours=hours, days=days)
+@core.route("/")
+def index():
+    return render_template("index.html")
 
-@core.route("/page/<int:page>/", methods=['GET'])
-@core.route("/<int:hours>-hours/page/<int:page>/", methods=['GET'])
-@core.route("/<int:days>-days/page/<int:page>/", methods=['GET'])
-def last(hours=None, days=None, page=1):
-    if days:
-        delta = timedelta(days=days)
+@core.route("/lastnews.json")
+@core.route("/lastnews-<string:delta>.json")
+def lastnews(delta=None):
+    if delta == "today":
+        end_time = datetime.now()
+        start_time = end_time.replace(hour=0, minute=0, second=0, microsecond=0)
+    elif delta == "yesterday":
+        end_time = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        start_time = end_time - timedelta(days=1)
+    elif delta == "week":
+        end_time = datetime.now()
+        start_time = end_time.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=7)
     else:
-        if not hours: hours = 6
-        delta = timedelta(hours=hours)
+        end_time = datetime.now()
+        start_time = end_time - timedelta(days=1)
 
-    if request.is_xhr:
-        news = News.objects(created_at__gt=(datetime.now() - delta)).order_by("-shares__count").paginate(page=page, per_page=app.config["LINKS_PER_PAGE"])
-        return jsonify(news=news.items, page=page)
-    else:
-        return redirect(url_for("core.index"))
+    return jsonify(News.objects(created_at__gt=start_time, created_at__lte=end_time).order_by("-shares__count")[:(app.config["LINKS_PER_PAGE"] * 4)])
 
 @core.route("/timeline/", methods=['GET'])
 @core.route("/timeline/page/<int:page>/", methods=['GET'])
