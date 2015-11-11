@@ -1,0 +1,11 @@
+{% extends "main.html" %}
+{# import "ga.macro" as ga #}
+
+{% block content %}
+<section class="page last"></section>
+{# ga.script()|safe #}
+<script type="text/javascript">
+  var page_images_url = "{{ url_for('static', filename='img/') }}";
+  {% if delta %}var pageDelta = "{{ delta }}";{% endif %}
+</script>
+{% endblock %}

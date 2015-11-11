@@ -13,8 +13,10 @@ import time
 core = Blueprint("core", __name__, template_folder="templates")
 
 @core.route("/")
-def index():
-    return render_template("index.html")
+@core.route("/lastnews/")
+@core.route("/lastnews/<string:delta>/")
+def index(delta=None):
+    return render_template("lastnews.html", delta=delta)
 
 @core.route("/lastnews.json")
 @core.route("/lastnews-<string:delta>.json")
@@ -32,7 +34,7 @@ def lastnews(delta=None):
         end_time = datetime.now()
         start_time = end_time - timedelta(days=1)
 
-    return jsonify(News.objects(created_at__gt=start_time, created_at__lte=end_time).order_by("-shares__count")[:(app.config["LINKS_PER_PAGE"] * 4)])
+    return jsonify(news=News.objects(created_at__gt=start_time, created_at__lte=end_time).order_by("-shares__count")[:(app.config["LINKS_PER_PAGE"] * 4)])
 
 @core.route("/timeline/", methods=['GET'])
 @core.route("/timeline/page/<int:page>/", methods=['GET'])
