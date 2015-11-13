@@ -1,11 +1,6 @@
-var pageDelta, autoTimeout;
-
 var autoUpdate = function() {
-  if (pageDelta) { var url = "/lastnews-" + page_delta + ".json"; }
-  else { var url = "/lastnews.json"; }
-
   $.ajax({
-    url: url,
+    url: window.location.href,
     success: function(data) {
       showNews(data["news"], true);
 
@@ -19,9 +14,6 @@ var autoUpdate = function() {
       }
     }
   });
-
-  clearTimeout(autoTimeout);
-  autoTimeout = setTimeout(autoUpdate, 20000);
 }
 
 var showNews = function(news, append) {
@@ -58,7 +50,7 @@ var showNews = function(news, append) {
       article.find("a").attr("title", article.find("a")[0].hostname);
 
       article.find("a > img")
-             .attr("src", page_images_url + "media/" + row["media"] + ".png");
+             .attr("src", pageImagesUrl + "media/" + row["media"] + ".png");
 
       if ($(".page.timeline").length) {
         article.find("span")
@@ -92,16 +84,16 @@ var showNews = function(news, append) {
 $(document).ready(function() {
   if ($(".page.timeline").length) {
     // update page content each minute or so
-    if (page_stamp > 0) {
-      console.log("New valid stamp: " + page_stamp);
+    if (pageStamp > 0) {
+      console.log("New valid stamp: " + pageStamp);
       var updateInterval = setInterval(function() {
         console.log("Update now!");
 
         $.ajax({
-          url: "/timeline/" + (update_stamp || page_stamp) + "/",
+          url: "/timeline/" + (updateStamp || pageStamp) + "/",
           success: function(data) {
             showNews(data["news"].reverse(), false);
-            update_stamp = parseInt(data["stamp"]);
+            updateStamp = parseInt(data["stamp"]);
           }
         });
       }, 60000);
@@ -109,19 +101,7 @@ $(document).ready(function() {
   }
   else if ($(".page.last").length) {
     console.log("Auto update with rating!");
-
-    // remap links
-    $("a.lastnews").on("click", function(event) {
-      pageDelta = $(this).data("delta");
-
-      $(".page article").remove();
-      autoUpdate();
-
-      // don't open links
-      event.preventDefault();
-    });
-
-    autoUpdate();
+    var updateInterval = setInterval(autoUpdate, 20000);
   }
 
   // init copy to clipboard button
@@ -146,23 +126,24 @@ $(document).mousemove(function() {
   $("article.last").removeClass("last");
 });
 
-var page_loading = false;
+var pageLoading = false;
 
 $(window).scroll(function() {
-  if($(".page.timeline").length && !page_loading && $(document).height() - ($(window).scrollTop() + $(window).height()) < 300) {
+  if($(".page.timeline").length && !pageLoading && $(document).height() - ($(window).scrollTop() + $(window).height()) < 300) {
     // load next page
     console.log("Next page!");
 
     // show loader
     $("#loader").show();
-    page_loading = true;
-    page_number += 1;
+    pageLoading = true;
+    pageNumber += 1;
 
     $.ajax({
-      url: "/timeline/" + page_stamp + "/page/" + page_number + "/",
+      url: "/timeline/" + (updateStamp || pageStamp) + "/",
+      data: { page: pageNumber },
       success: function(data) {
         showNews(data["news"], true);
-        page_loading = false;
+        pageLoading = false;
       },
       complete: function() {
         // hide loader

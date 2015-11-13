@@ -16,11 +16,6 @@ core = Blueprint("core", __name__, template_folder="templates")
 @core.route("/lastnews/")
 @core.route("/lastnews/<string:delta>/")
 def index(delta=None):
-    return render_template("lastnews.html", delta=delta)
-
-@core.route("/lastnews.json")
-@core.route("/lastnews-<string:delta>.json")
-def lastnews(delta=None):
     if delta == "today":
         end_time = datetime.now()
         start_time = end_time.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -34,29 +29,40 @@ def lastnews(delta=None):
         end_time = datetime.now()
         start_time = end_time - timedelta(days=1)
 
-    return jsonify(news=News.objects(created_at__gt=start_time, created_at__lte=end_time).order_by("-shares__count")[:(app.config["LINKS_PER_PAGE"] * 4)])
+    news = News.objects(created_at__gt=start_time, created_at__lte=end_time)\
+               .order_by("-shares__count")[:(app.config["LINKS_PER_PAGE"] * 2)]
 
-@core.route("/timeline/", methods=['GET'])
-@core.route("/timeline/page/<int:page>/", methods=['GET'])
-@core.route("/timeline/<int:stamp>/", methods=['GET'])
-@core.route("/timeline/<int:stamp>/page/<int:page>/", methods=['GET'])
-def timeline(stamp=None, page=1):
-    if not stamp:
-        news = News.objects().paginate(page=page, per_page=app.config["LINKS_PER_PAGE"])
+    if request.is_xhr:
+        return jsonify(news=news, delta=delta)
     else:
-        if page > 1:
-            news = News.objects(created_at__lte=datetime.utcfromtimestamp(stamp)).paginate(page=page, per_page=app.config["LINKS_PER_PAGE"])
-        else:
-            news = News.objects(created_at__gt=datetime.utcfromstimetamp(stamp)).paginate(page=page, per_page=app.config["LINKS_PER_PAGE"])
+        return render_template("lastnews.html", news=news, delta=delta)
 
+@core.route("/timeline/")
+@core.route("/timeline/<int:stamp>/")
+def timeline(stamp=None):
+    page = request.args.get("page", 1)
+    search = request.args.get("search", "")
+
+    if not stamp:
+        news = News.objects()
+    else:
+        if page == 1:
+            news = News.objects(created_at__gt=datetime.utcfromtimestamp(stamp))
+        else:
+            news = News.objects(created_at__lte=datetime.utcfromstimetamp(stamp))
+
+    if search:
+        news = news.filter(text__icontains=search)
+
+    news = news.paginate(page=page, per_page=app.config["LINKS_PER_PAGE"])
     stamp = time.time()
 
     if request.is_xhr:
         return jsonify(news=news.items, stamp=stamp)
     else:
-        return render_template("timeline.html", news=news, stamp=stamp)
+        return render_template("timeline.html", news=news.items, stamp=stamp)
 
-@core.route("/status/", methods=['GET'])
+@core.route("/status/")
 def status():
     medialist = Media.objects.all()
     return render_template("status.html", medialist=medialist)

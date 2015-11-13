@@ -2,10 +2,20 @@
 {# import "ga.macro" as ga #}
 
 {% block content %}
-<section class="page last"></section>
+<section class="page last">
+  {% for news in news %}
+  <article id="{{ news.id }}">
+    <a href="{{ news.link }}" class="{{ news.tags|join(" ") }}" target="_blank" title="{{ news.link|host }}">
+      <span>{{ news.shares|sum(attribute='count') }}</span>
+      <img src="{{ url_for('static', filename='img/media/%s.png' % news.media) }}" />
+      {{ news.text }}
+    </a>
+  </article>
+  {% endfor %}
+</section>
 {# ga.script()|safe #}
 <script type="text/javascript">
-  var page_images_url = "{{ url_for('static', filename='img/') }}";
+  var pageImagesUrl = "{{ url_for('static', filename='img/') }}";
   {% if delta %}var pageDelta = "{{ delta }}";{% endif %}
 </script>
 {% endblock %}

@@ -3,7 +3,7 @@
 
 {% block content %}
 <section class="page timeline">
-  {% for news in news.items or news %}
+  {% for news in news %}
   <article id="{{ news.id }}">
     <a href="{{ news.link }}" class="{{ news.tags|join(" ") }}" target="_blank" title="{{ news.link|host }}">
       <span>{{ news.created_at|time }}</span>
@@ -16,9 +16,9 @@
 <div id="loader"><div class="loader"></div></div>
 {# ga.script()|safe #}
 <script type="text/javascript">
-  var page_images_url = "{{ url_for('static', filename='img/') }}",
-      page_number = 1,
-      page_stamp = {{ stamp|int }},
-      update_stamp = {{ stamp|int }};
+  var pageImagesUrl = "{{ url_for('static', filename='img/') }}",
+      pageNumber = 1,
+      pageStamp = {{ stamp|int }},
+      updateStamp = {{ stamp|int }};
 </script>
 {% endblock %}
