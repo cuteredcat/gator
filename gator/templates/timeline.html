@@ -2,6 +2,9 @@
 {# import "ga.macro" as ga #}
 
 {% block content %}
+<form class="search" action="." method="get">
+  <button type="submit" title="Найти"></button><input id="search" name="search" type="search" value="{{ search }}" placeholder="Поиск по ленте" />
+</form>
 <section class="page timeline">
   {% for news in news %}
   <article id="{{ news.id }}">

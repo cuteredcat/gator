@@ -40,7 +40,7 @@ def index(delta=None):
 @core.route("/timeline/")
 @core.route("/timeline/<int:stamp>/")
 def timeline(stamp=None):
-    page = request.args.get("page", 1)
+    page = int(request.args.get("page", 1))
     search = request.args.get("search", "")
 
     if not stamp:
@@ -49,7 +49,7 @@ def timeline(stamp=None):
         if page == 1:
             news = News.objects(created_at__gt=datetime.utcfromtimestamp(stamp))
         else:
-            news = News.objects(created_at__lte=datetime.utcfromstimetamp(stamp))
+            news = News.objects(created_at__lte=datetime.utcfromtimestamp(stamp))
 
     if search:
         news = news.filter(text__icontains=search)
@@ -58,9 +58,9 @@ def timeline(stamp=None):
     stamp = time.time()
 
     if request.is_xhr:
-        return jsonify(news=news.items, stamp=stamp)
+        return jsonify(news=news.items, search=search, stamp=stamp)
     else:
-        return render_template("timeline.html", news=news.items, stamp=stamp)
+        return render_template("timeline.html", news=news.items, search=search, stamp=stamp)
 
 @core.route("/status/")
 def status():

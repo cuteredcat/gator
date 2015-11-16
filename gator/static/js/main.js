@@ -1,17 +1,31 @@
+var pageAutoSearch;
+
 var autoUpdate = function() {
   $.ajax({
     url: window.location.href,
     success: function(data) {
-      showNews(data["news"], true);
-
-      $(".page article:not(.updated)").remove();
-
       var articleHeight = $(".page article:first-child").outerHeight(true);
       $(".page").css("height", articleHeight * data["news"].length + "px");
+
+      showNews(data["news"], true);
+      $(".page article:not(.updated)").remove();
 
       for (var i = 0; i < data["news"].length; i++) {
         $("#" + data["news"][i]["_id"]["$oid"]).css("top", (articleHeight * i) + "px");
       }
+    }
+  });
+}
+
+var autoSearch = function() {
+  // remove all news
+  $(".page article").remove();
+
+  $.ajax({
+    url: window.location.href.split("?")[0],
+    data: { search: $("#search").val() },
+    success: function(data) {
+      showNews(data["news"], true);
     }
   });
 }
@@ -91,6 +105,7 @@ $(document).ready(function() {
 
         $.ajax({
           url: "/timeline/" + (updateStamp || pageStamp) + "/",
+          data: { search: $("#search").val() },
           success: function(data) {
             showNews(data["news"].reverse(), false);
             updateStamp = parseInt(data["stamp"]);
@@ -98,6 +113,12 @@ $(document).ready(function() {
         });
       }, 60000);
     }
+
+    // autosearch after input value
+    $("#search").on("keyup", function(event) {
+      clearTimeout(pageAutoSearch);
+      pageAutoSearch = setTimeout(autoSearch, 500);
+    });
   }
   else if ($(".page.last").length) {
     console.log("Auto update with rating!");
@@ -140,7 +161,7 @@ $(window).scroll(function() {
 
     $.ajax({
       url: "/timeline/" + (updateStamp || pageStamp) + "/",
-      data: { page: pageNumber },
+      data: { page: pageNumber, search: $("#search").val() },
       success: function(data) {
         showNews(data["news"], true);
         pageLoading = false;
