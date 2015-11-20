@@ -6,8 +6,11 @@
   <button type="submit" title="Найти"></button><input id="search" name="search" type="search" value="{{ search }}" placeholder="Поиск по ленте" />
 </form>
 <section class="page timeline">
+  {% set current_date = None %}
   {% for news in news %}
-  <article id="{{ news.id }}">
+  {% if news.created_at|date != current_date|date %}<div class="spacer"><div class="date">{{ news.created_at|date("long") }}</div></div>{% endif %}
+  {% set current_date = news.created_at %}
+  <article id="{{ news.id }}" data-date="{{ news.created_at|date('YYYYMMDD') }}">
     <a href="{{ news.link }}" class="{{ news.tags|join(" ") }}" target="_blank" title="{{ news.link|host }}">
       <span>{{ news.created_at|time }}</span>
       <img src="{{ url_for('static', filename='img/media/%s.png' % news.media) }}" />

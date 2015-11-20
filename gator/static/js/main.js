@@ -19,7 +19,7 @@ var autoUpdate = function() {
 
 var autoSearch = function() {
   // remove all news
-  $(".page article").remove();
+  $(".page article, .page .spacer").remove();
 
   $.ajax({
     url: window.location.href.split("?")[0],
@@ -43,11 +43,21 @@ var showNews = function(news, append) {
 
     if (!$("#" + row["_id"]["$oid"]).length) {
       var article = $("<article><a><span></span><img /></a></article>"),
-          date = new Date(row["created_at"]["$date"]),
-          hours = "0" + date.getHours(),
-          minutes = "0" + date.getMinutes();
+          date = moment(new Date(row["created_at"]["$date"]));
 
-      article.attr("id", row["_id"]["$oid"]);
+      if (!append) { var last = $(".page article").first(); }
+      else { var last = $(".page article").last(); }
+
+      if ((last.data("date") && last.data("date") != date.format("YYYYMMDD")) || (!last.data("date") && moment().format("YYYYMMDD") != date.format("YYYYMMDD"))) {
+        // insert spacer
+        var spacer = $("<div class=\"spacer\"><div class=\"date\">" + date.format("LL") + "</div></div>");
+
+        if (!append) { last.before(spacer); }
+        else { last.after(spacer); }
+      }
+
+      article.attr("id", row["_id"]["$oid"])
+             .data("date", date.format("YYYYMMDD"));
 
       if (!append) {
         article.css("height", 0)
@@ -68,7 +78,7 @@ var showNews = function(news, append) {
 
       if ($(".page.timeline").length) {
         article.find("span")
-               .text(hours.substr(-2) + ":" + minutes.substr(-2));
+               .text(date.format("HH:mm"));
       }
       else if ($(".page.last").length) {
         article.addClass("updated");
@@ -117,7 +127,7 @@ $(document).ready(function() {
     // autosearch after input value
     $("#search").on("keyup", function(event) {
       clearTimeout(pageAutoSearch);
-      pageAutoSearch = setTimeout(autoSearch, 500);
+      pageAutoSearch = setTimeout(autoSearch, 800);
     });
   }
   else if ($(".page.last").length) {
